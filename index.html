@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>You Said Yes! 💖</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- EmailJS Library -->
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+</head>
+<body>
+    <div class="overlay"></div>
+    <div class="container">
+        <div class="card message-card">
+            <h1>Yay! You Said Yes! 🎉</h1>
+            <div class="hearts">
+                <span>💕</span>
+                <span>💖</span>
+                <span>💕</span>
+            </div>
+            <p class="subtitle" style="font-weight: bold;">ILOVEYOUUUUSOMUCHHHHKAIKAIHEHHE</p>
+            
+            <form id="valentineForm" class="message-form">
+                <div class="form-group">
+                    <label for="name">Your Name 💕</label>
+                    <input type="text" id="name" name="from_name" placeholder="Enter your name..." required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="message">Your Message 💌</label>
+                    <textarea id="message" name="message" rows="5" placeholder="Write something sweet..." required></textarea>
+                </div>
+                
+                <button type="submit" class="btn send-btn" id="submitBtn">Send My Love 💖</button>
+                <p id="statusMsg" style="margin-top: 15px; font-weight: bold;"></p>
+            </form>
+            
+            <a href="index.html" class="back-link">← Go Back</a>
+        </div>
+    </div>
+
+    <script>
+        // ============================================
+        // EMAILJS SETUP - Follow the instructions below!
+        // ============================================
+        
+        // STEP 1: Go to https://www.emailjs.com/ and create a FREE account
+        // STEP 2: After logging in, go to "Email Services" and click "Add New Service"
+        //         - Choose "Gmail" and connect your Gmail account (markjustinnavaja@gmail.com)
+        //         - Note down your SERVICE ID (looks like: service_xxxxxxx)
+        // STEP 3: Go to "Email Templates" and click "Create New Template"
+        //         - In the template, set:
+        //           To Email: markjustinnavaja@gmail.com
+        //           Subject: 💕 Valentine's Message from {{from_name}}
+        //           Content: 
+        //              💖 Valentine's Message 💖
+        //              
+        //              From: {{from_name}}
+        //              
+        //              Message:
+        //              {{message}}
+        //              
+        //              ---
+        //              Sent with love 💕
+        //         - Save the template and note down your TEMPLATE ID (looks like: template_xxxxxxx)
+        // STEP 4: Go to "Account" > "General" and copy your PUBLIC KEY
+        // STEP 5: Replace the values below with your actual IDs:
+        
+        const EMAILJS_PUBLIC_KEY = "Jsq8y9n9irXxy36f-";
+        const EMAILJS_SERVICE_ID = "service_vi9ffxq";
+        const EMAILJS_TEMPLATE_ID = "template_xzyvp0c";
+        
+        // ============================================
+        
+        // Initialize EmailJS
+        emailjs.init(EMAILJS_PUBLIC_KEY);
+        
+        const form = document.getElementById('valentineForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const statusMsg = document.getElementById('statusMsg');
+        
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Disable button and show loading
+            submitBtn.disabled = true;
+            submitBtn.textContent = "Sending... 💌";
+            statusMsg.textContent = "";
+            statusMsg.style.color = "#666";
+            
+            // Get form data
+            const templateParams = {
+                from_name: document.getElementById('name').value,
+                message: document.getElementById('message').value,
+                to_email: "markjustinnavaja@gmail.com"
+            };
+            
+            // Send email using EmailJS
+            emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams)
+                .then(function(response) {
+                    console.log('SUCCESS!', response.status, response.text);
+                    statusMsg.textContent = "Message sent successfully! 💖";
+                    statusMsg.style.color = "#28a745";
+                    
+                    // Redirect to thank you page
+                    setTimeout(function() {
+                        window.location.href = 'thankyou.html';
+                    }, 1500);
+                })
+                .catch(function(error) {
+                    console.log('FAILED...', error);
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = "Send My Love 💖";
+                    
+                    // Show helpful error message
+                    if (EMAILJS_PUBLIC_KEY === "YOUR_PUBLIC_KEY_HERE") {
+                        statusMsg.innerHTML = "⚠️ EmailJS not configured yet!<br><small>Follow the setup instructions in the code.</small>";
+                    } else {
+                        statusMsg.textContent = "Failed to send. Please try again! 😢";
+                    }
+                    statusMsg.style.color = "#dc3545";
+                });
+        });
+
+        // Create floating hearts animation
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.classList.add('floating-heart');
+            heart.innerHTML = ['💕', '💖', '💗', '💓', '❤️'][Math.floor(Math.random() * 5)];
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.animationDuration = Math.random() * 3 + 4 + 's';
+            document.body.appendChild(heart);
+            
+            setTimeout(() => {
+                heart.remove();
+            }, 7000);
+        }
+        
+        setInterval(createHeart, 500);
+    </script>
+</body>
+</html>
